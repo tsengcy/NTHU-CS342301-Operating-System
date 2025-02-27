@@ -2,7 +2,7 @@
 This repository contains the homework for the open course on Operating Systems provided by NTHU.([link](<https://ocw.nthu.edu.tw/ocw/index.php?page=course&cid=141&>))
 
 ## Install Nachos
-1. Install Ubuntu14.04 32-bits ([link](https://releases.ubuntu.com/14.04/)) on Virtual Box.
+1. Install Ubuntu14.04 32-bits ([link](https://releases.ubuntu.com/14.04/)) on VirtualBox.
 
 2. Install C shell (csh) and g++
     ```bash
