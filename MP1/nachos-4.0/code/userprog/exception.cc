@@ -102,7 +102,7 @@ ExceptionHandler(ExceptionType which)
 			
 			if(OFile == NULL){ /*fail*/
 				kernel->machine->WriteRegister(2, -1);
-				std::cout << "Open: " << -1 << std::endl;
+				std::cout << "fail to open" << std::endl;
 			}else{
 				kernel->machine->WriteRegister(2, OFile->getFileid());
 				std::cout << "Open: " << OFile->getFileid() << std::endl;
@@ -115,16 +115,28 @@ ExceptionHandler(ExceptionType which)
 			
 			size = kernel->machine->ReadRegister(5);
 			id = kernel->machine->ReadRegister(6);
+
+			if(!kernel->fileSystem->isFile(id)){
+				kernel->machine->WriteRegister(2, -1);
+				cout << "attempt writing to an invalid id." << endl;
+				return;
+			}
 			
 			OFile = new OpenFile(id);
 			OFile->Write(msg, size);
-
+			kernel->machine->WriteRegister(2, OFile->getFileid());
 			return;
 		case SC_Read:
 			val = kernel->machine->ReadRegister(4);
 			msg = &(kernel->machine->mainMemory[val]);
 			size = kernel->machine->ReadRegister(5);
 			id = kernel->machine->ReadRegister(6);
+			
+			if(!kernel->fileSystem->isFile(id)){
+				kernel->machine->WriteRegister(2, -1);
+				cout << "attempt reading to an invalid id." << endl;
+				return;
+			}
 
 			OFile = new OpenFile(id);
 			val = OFile->Read(msg, size);
@@ -132,10 +144,15 @@ ExceptionHandler(ExceptionType which)
 			return;
 		case SC_Close:
 			id = kernel->machine->ReadRegister(4);
-			Close(id);
-			kernel->machine->WriteRegister(2, 1);
-			std::cout << "close" << std::endl;
+			if(kernel->fileSystem->close(id)){
+				kernel->machine->WriteRegister(2, 1);
+				std::cout << "close" << std::endl;
+			}else{
+				kernel->machine->WriteRegister(2, 0);
+				std::cout << "fail to close" << std::endl;
+			}
 			return;
+
 		case SC_PrintMsg:
 			val = kernel->machine->ReadRegister(4);
 			msg = &(kernel->machine->mainMemory[val]);

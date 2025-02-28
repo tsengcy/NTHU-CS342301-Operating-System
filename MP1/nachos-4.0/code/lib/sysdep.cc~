@@ -270,8 +270,8 @@ OpenForReadWrite(char *name, bool crashOnError)
     int fd = open(name, O_RDWR, 0);
 
     // ASSERT(!crashOnError || fd >= 0);
-    if(!crashOnError || fd >= 0) return fd;
-    else return -1;
+    if(!crashOnError || fd >= 0) return -1;
+    else return fd;
 }
 
 //----------------------------------------------------------------------

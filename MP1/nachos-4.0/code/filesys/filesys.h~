@@ -37,13 +37,16 @@
 
 #include "copyright.h"
 #include "openfile.h"
+#include "bitmap.h"
 
 #ifdef FILESYS_STUB 		// Temporarily implement file system calls as 
 				// calls to UNIX, until the real file system
 				// implementation is available
 class FileSystem {
   public:
-    FileSystem(bool format=true) {}
+    FileSystem(bool format=true) {bMap = new BitMap(32);}
+
+    ~FileSystem(){delete bMap;}
 
     bool Create(char *name, int initialSize) { 
 	int fileDescriptor = OpenForWrite(name);
@@ -54,15 +57,33 @@ class FileSystem {
 	}
 
     OpenFile* Open(char *name) {
-	  int fileDescriptor = OpenForReadWrite(name, FALSE);
+	int fileDescriptor = OpenForReadWrite(name, FALSE);
 
-	  if (fileDescriptor == -1) return NULL;
-	  return new OpenFile(fileDescriptor);
-      }
+	if (fileDescriptor == -1) return NULL;
+	bMap->Mark(fileDescriptor);
+	return new OpenFile(fileDescriptor);
+    }
 
     bool Remove(char *name) { return Unlink(name) == 0; }
     
-    bool isFile(int sector){return true;}
+    bool isFile(int sector)
+    {
+	if(bMap->Test(sector)) return true;
+	else return false;
+    }
+
+    bool close(int id)
+    {
+	if(Close(id) == 1)
+	{
+		bMap->Clear(id);
+		return true;
+	}
+	else return false;
+    }
+
+  private:
+    BitMap* bMap;
 
 };
 
@@ -88,6 +109,8 @@ class FileSystem {
     void Print();			// List all the files and their contents
     
     bool isFile(int sector);
+
+    bool close(int id){return Close(id);}
 
   private:
    OpenFile* freeMapFile;		// Bit map of free disk blocks,
