@@ -141,5 +141,32 @@ AddrSpace::Load(char *fileName)
     }
     ...
 }
+```
 
+then the result will be
+```
+Total threads number is 2
+Thread test/test1 is executing.
+Thread test/test2 is executing.
+9
+8
+7
+20
+21
+22
+23
+24
+6
+return value:0
+25
+return value:0
+No threads ready or runnable, and no pending interrupts.
+Assuming the program completed.
+Machine halting!
+
+Ticks: total 300, idle 8, system 70, user 222
+Disk I/O: reads 0, writes 0
+Console I/O: reads 0, writes 0
+Paging: faults 0
+Network I/O: packets received 0, sent 0
 ```
