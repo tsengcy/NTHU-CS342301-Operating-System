@@ -28,7 +28,7 @@ This repository contains the homework for the open course on Operating Systems p
     ./userprog/nachos -e ./test/test1
 
     # Total threads number is 1
-    # Thread test/test1 is excuting
+    # Thread test/test1 is executing
     # Print integer:9
     # Print integer:8
     # Print integer:7

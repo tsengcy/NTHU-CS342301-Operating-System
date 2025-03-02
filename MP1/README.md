@@ -2,7 +2,7 @@
 
 1. Implement a console I/O system call
 
-    This code have already done in the Nachos file.
+    This code have already done in the Nachos file, just need to modify the output format.
 
     userprog/exception.cc
     ```cpp
@@ -13,7 +13,7 @@
             switch(type){
                 case SC_PrintInt:
 			    val=kernel->machine->ReadRegister(4);
-			    cout << "Print integer:" <<val << endl;
+			    cout << val << endl;
 			    return;
             }
         }
